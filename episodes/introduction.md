@@ -1,114 +1,143 @@
 ---
-title: "Using Markdown"
-teaching: 10 # teaching time in minutes
-exercises: 2 # exercise time in minutes
+title: "Reproducible Research"
+teaching: 10
+exercises: 8
 ---
 
-:::::::::::::::::::::::::::::::::::::: questions 
+::: questions
 
-- How do you write a lesson using Markdown and `{sandpaper}`?
+* What does it mean to be "reproducible"?
+* How is "reproducibility" different than "reuse"?
 
-::::::::::::::::::::::::::::::::::::::::::::::::
+:::
 
-::::::::::::::::::::::::::::::::::::: objectives
+::: objectives
 
-- Explain how to use markdown with The Carpentries Workbench
-- Demonstrate how to include pieces of code, figures, and nested challenge blocks
+* Describe the terms "reproducibility" and "reuse" as they relate to research computing.
+* Describe what is needed for a computational environment to be reproducible.
 
-::::::::::::::::::::::::::::::::::::::::::::::::
+:::
 
 ## Introduction
 
-This is a lesson created via The Carpentries Workbench. It is written in
-[Pandoc-flavored Markdown](https://pandoc.org/MANUAL.html) for static files and
-[R Markdown][r-markdown] for dynamic files that can render code into output. 
-Please refer to the [Introduction to The Carpentries 
-Workbench](https://carpentries.github.io/sandpaper-docs/) for full documentation.
+Modern scientific analyses are complex software and logistical workflows that may span multiple software environments and require heterogenous software and computing infrastructure.
+Scientific researchers need to use these tools to be able to do their research, and to ensure the validity of their work, which can be difficult.
+Scientific software enables all of this work to happen, but software isn't a static resource &mdash; software is continually developed, revised, and released, which can introduce breaking changes or subtle computational differences in outputs and results.
+Having the software you're using change without you intending it from day-to-day, run-to-run, or on different machines is problematic when trying to do high quality research.
+These changes can cause software bugs, errors in scientific results, and make findings unreproducible.
+All of these things are not desirable!
 
-What you need to know is that there are three sections required for a valid
-Carpentries lesson:
+::: callout
 
- 1. `questions` are displayed at the beginning of the episode to prime the
-    learner for the content.
- 2. `objectives` are the learning objectives for an episode displayed with
-    the questions.
- 3. `keypoints` are displayed at the end of the episode to reinforce the
-    objectives.
+When discussing "software" in this lesson we will primarily be meaning open source software that is openly developed.
+However, there are situations in which software might (for good reason) be:
 
-:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: instructor
+* Closed development with open source release artifacts
+* Closed development and closed source with public binary distributions
+* Closed development and closed source with proprietary licenses
 
-Inline instructor notes can help inform instructors of timing challenges
-associated with the lessons. They appear in the "Instructor View"
+:::
 
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+::: challenge
 
-::::::::::::::::::::::::::::::::::::: challenge 
+## Challenges to reproducible research?
 
-## Challenge 1: Can you do it?
+Take 3 minutes to discuss the following questions in small groups.
 
-What is the output of this command?
+**What are other challenges to doing reproducible research?**
 
-```r
-paste("This", "new", "lesson", "looks", "good")
-```
+Think about all aspects of research computing &mdash; data, hardware, and software &mdash; from collecting and cleaning the data through analysis and visualization to publishing your methods and results?
 
-:::::::::::::::::::::::: solution 
+Have you even inherited a project from a previous contributor?
+Or gone back to a previous project more than couple months later and struggled to get back into it?
+What issues did you come across?
 
-## Output
- 
-```output
-[1] "This new lesson looks good"
-```
+::: solution
 
-:::::::::::::::::::::::::::::::::
+## Possible answers
 
+There are many! Here are some you might have thought of:
 
-## Challenge 2: how do you nest solutions within challenge blocks?
+* (Not having) Access to data
+* Required software packages be removed from mutable package indexes
+* Unreproducible builds of software that isn't packaged and distributed on public package indexes
+* Analysis code not being under version control
+* Not having any environment definition configuration files
 
-:::::::::::::::::::::::: solution 
+:::
+:::
 
-You can add a line with at least three colons and a `solution` tag.
+## Computational reproducibility
 
-:::::::::::::::::::::::::::::::::
-::::::::::::::::::::::::::::::::::::::::::::::::
+"Reproducible" research can mean many things and is a multipronged problem.
+This lesson will focus primarily on computational reproducibility.
+Like all forms of reproducibility, there are multiple "levels" of reproducibility.
+For this lesson we will focus on "full" reproducibility, meaning that reproducible software environments will:
 
-## Figures
+* Be defined through user readable and writable configuration files.
+* Have machine produced "lock files" with a full definition of all software in the environment.
+* Specify the target computer platforms (operating system and architecture) for all environments solved.
+* Have the resolution of a platform's environments be machine agnostic (e.g. macOS platform machines can solve environments for Linux platforms).
+* Have the software packages defined in the environments be published on immutable public package indexes.
 
-You can use standard markdown for static figures with the following syntax:
+::: challenge
 
-`![optional caption that appears below the figure](figure url){alt='alt text for
-accessibility purposes'}`
+##  What is computational reproducibility?
 
-![You belong in The Carpentries!](https://raw.githubusercontent.com/carpentries/logo/master/Badge_Carpentries.svg){alt='Blue Carpentries hex person logo with no text.'}
+Do you think "computational reproducibility" means that the exact same numeric results should be achieved every time?
+Discuss with your table.
 
-::::::::::::::::::::::::::::::::::::: callout
+::: solution
 
-Callout sections can highlight information.
+Not necessarily.
+Even though the computational software environment is identical there are things that can change between runs of software that could slightly change numerical results (e.g. random number generation seeds, file read order, machine entropy).
+This isn't necessarily a problem, and in general one should be more concerned with getting answers that make sense within application uncertainties than matching down to machine precision.
 
-They are sometimes used to emphasise particularly important points
-but are also used in some lessons to present "asides": 
-content that is not central to the narrative of the lesson,
-e.g. by providing the answer to a commonly-asked question.
+Did your the individuals in your group agree?
 
-::::::::::::::::::::::::::::::::::::::::::::::::
+:::
+:::
 
+## Computational reproducibility vs. scientific reuse
 
-## Math
+Aiming for computational reproducibility is the first step to making scientific research more beneficial to us.
+For the purposes of a single analysis this should be the primary goal.
+However, just because a software environment is fully reproducible does not mean that the research is automatically reusable.
+Imagine an analysis that has been fully documented but with use assumptions (e.g. the data used, configuration options) hard-coded into the software.
+The analysis can be reproduced, but needs to be refactored for different analysis choices.
 
-One of our episodes contains $\LaTeX$ equations when describing how to create
-dynamic reports with {knitr}, so we now use mathjax to describe this:
+**Reuse** allows for the tools and components of the scientific workflow to be composable tools that can interoperate together to create a workflow.
+The steps of the workflow might exist in radically different computational environments and require different software, or different versions of the same software tools.
+Given these demands, reproducible computational software environments are a first step towards fully reusable scientific workflows.
 
-`$\alpha = \dfrac{1}{(1 - \beta)^2}$` becomes: $\alpha = \dfrac{1}{(1 - \beta)^2}$
+This lesson will focus on computational reproducibility of scientific workflows.
+Scientifically reusable analysis workflows are a more extensive topic, but this lesson will link to references on the topic.
 
-Cool, right?
+::: challenge
 
-::::::::::::::::::::::::::::::::::::: keypoints 
+## The challenges of creating reproducible and reusable workflows
 
-- Use `.md` files for episodes when you want static content
-- Use `.Rmd` files for episodes when you need to generate output
-- Run `sandpaper::check_lesson()` to identify any issues with your lesson
-- Run `sandpaper::build_lesson()` to preview your lesson locally
+What personal challenges have you encountered to making your own research practices reproducible and reusable?
 
-::::::::::::::::::::::::::::::::::::::::::::::::
+::: solution
 
-[r-markdown]: https://rmarkdown.rstudio.com/
+## Possible answers
+
+* Technical expertise in reproducibility technologies
+* Time to learn new tools
+* Balancing reproducibility concerns with using tools the entire research team can understand
+
+:::
+:::
+
+In addition to the computational issues that arise while creating reproducible and reusable workflows, it takes time and effort to design analyses with these in mind.
+This lesson aims to teach you tools that will make creating reproducible and reusable workflows easier.
+
+::: keypoints
+
+* Modern scientific research is complex and requires software environments.
+* Computational reproducibility helps to enable reproducible science.
+* New technologies make all of these processes easier.
+* Reproducible computational software environments are a first step toward fully reusable scientific workflows.
+
+:::
