@@ -1,0 +1,33 @@
+[workspace]
+authors = ["Matthew Feickert <matthew.feickert@cern.ch>"]
+channels = ["conda-forge"]
+name = "reproducible-ml-workflows"
+platforms = ["linux-64", "osx-arm64", "win-64"]
+version = "0.1.0"
+
+[tasks.check]
+description = "Validate the structure of the input files"
+cmd = """
+Rscript -e "sandpaper::check_lesson()"
+"""
+
+[tasks.build]
+description = "build and validate lesson"
+cmd = """
+Rscript -e "sandpaper::build_lesson()"
+"""
+
+[tasks.serve]
+description = "Serve the lesson"
+cmd = """
+Rscript -e "sandpaper::serve()"
+"""
+
+[tasks.start]
+description = "Serve site"
+depends-on = ["serve"]
+
+[dependencies]
+git = ">=2.52.0,<3"
+r-varnish = ">=1.0.9,<2"
+r-sandpaper = ">=0.18.4,<0.19"
